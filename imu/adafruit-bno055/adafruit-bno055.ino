@@ -30,13 +30,18 @@ void loop(void)
   bno.getEvent(&event);
   
   /* Display the floating point data */
-  Serial.print("X: ");
-  Serial.print(event.orientation.x, 4);
-  Serial.print("\tY: ");
-  Serial.print(event.orientation.y, 4);
-  Serial.print("\tZ: ");
-  Serial.print(event.orientation.z, 4);
-  Serial.println("");
+  Serial.print("YAW/COMPASS(X): ");  //Based on "top-down" view: Clockwise subtracts from the current angle, Counte-Clockwise increases the current angle. 
+                                  //Angle is based on 360 degrees with the ZERO based on the position/angle of the sensor at the time of sensor initialization.
+  Serial.print(event.orientation.x, 2); //second parameter sets the number of decimal places
+  Serial.print("\t");
+  Serial.print("ROLL(Y): "); //Based on the Sonar Unit being the "front" of the robot: 
+                          //Roll to Left (CCW) = Negative Value, Roll to Right (CW) = Positive Value
+  Serial.print(event.orientation.y, 2);
+  Serial.print("\t");
+  Serial.print("PITCH(Z): ");  //Based on the Sonar Unit being the "front" of the robot: 
+                            //Pitch Forward = Negative Value (going lower, "downhill"), Pitch Backward = Positive Value (going higher, "uphill")
+  Serial.print(event.orientation.z, 2);
+  Serial.print("\n");
   
   delay(100);
 }
