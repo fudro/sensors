@@ -43,14 +43,13 @@
  int range_left = 0;    //calculated range value
  int range_center = 0;
  int range_right = 0;
- int sensor_left = A12;    //raw analog voltage readings from the sensor
- int sensor_center = A13;
- int sensor_right = A14;
- int left_value[10];    //arrays to hold stored sensor readings
- int center_value[10];
- int right_value[10];
+ int sonar_left = A12;    //raw analog voltage readings from the sensor
+ int sonar_center = A13;
+ int sonar_right = A14;
+ int left_sonar[10];    //arrays to hold stored sensor readings
+ int center_sonar[10];
+ int right_sonar[10];
  int trigger_pin = A6;
- int flag = 0;  //control state and prevent multiple triggers
  int left_sort_array[10]; //to hold last 10 values, will be sorted low to high then select median value
  int center_sort_array[10];
  int right_sort_array[10];
@@ -73,40 +72,40 @@ void loop() {
   delay(20);
 
   for (int i = 0; i < num_samples; i++) {
-    left_value[i] = analogRead(sensor_left);
-    center_value[i] = analogRead(sensor_center);
-    right_value[i] = analogRead(sensor_right);
+    left_sonar[i] = analogRead(sonar_left);
+    center_sonar[i] = analogRead(sonar_center);
+    right_sonar[i] = analogRead(sonar_right);
   }
 
       /*Print sorted range values*/
 //      Serial.println("Sorted Ranges: ");
 //      Serial.print("Left(cm): \t");
-      sort(left_value, num_samples);
+      sort(left_sonar, num_samples);
 //      for(int i=0; i<num_samples; i++) {
-//         Serial.print(left_value[i]/2); 
+//         Serial.print(left_sonar[i]/2); 
 //         Serial.print("\t");
 //      }
 //      Serial.print("\n");
 //      Serial.print("Center(cm): \t");
-      sort(center_value, num_samples);
+      sort(center_sonar, num_samples);
 //      for(int i=0; i<num_samples; i++) {
-//         Serial.print(center_value[i]/2); 
+//         Serial.print(center_sonar[i]/2); 
 //         Serial.print("\t");
 //      }
 //      Serial.print("\n");
 //      Serial.print("Right(cm): \t");
-      sort(right_value, num_samples);
+      sort(right_sonar, num_samples);
 //      for(int i=0; i<num_samples; i++) {
-//         Serial.print(right_value[i]/2); 
+//         Serial.print(right_sonar[i]/2); 
 //         Serial.print("\t");
 //      }
 //      Serial.println("\n");
 
 
   if(sort_count < num_samples) {
-    left_sort_array[sort_count] = left_value[num_samples - sample_offset]/2;
-    center_sort_array[sort_count] = center_value[num_samples - sample_offset]/2;
-    right_sort_array[sort_count] = right_value[num_samples - sample_offset]/2;
+    left_sort_array[sort_count] = left_sonar[num_samples - sample_offset]/2;
+    center_sort_array[sort_count] = center_sonar[num_samples - sample_offset]/2;
+    right_sort_array[sort_count] = right_sonar[num_samples - sample_offset]/2;
     sort_count++;
   }
   else {
@@ -127,9 +126,9 @@ void loop() {
     Serial.print("\n");
   }
 
-  memset(left_value, 0, sizeof(left_value));    //reset arrays
-  memset(center_value, 0, sizeof(center_value));
-  memset(right_value, 0, sizeof(right_value));
+  memset(left_sonar, 0, sizeof(left_sonar));    //reset arrays
+  memset(center_sonar, 0, sizeof(center_sonar));
+  memset(right_sonar, 0, sizeof(right_sonar));
 }
 
 void sort(int a[], int size) {
