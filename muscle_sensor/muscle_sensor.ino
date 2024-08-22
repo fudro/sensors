@@ -2,7 +2,7 @@
  * This program demonstrates basic functionality of hte Myoware Muscle Sensor
  */
 
-
+const int LEDPIN = LED_BUILTIN;
 int sensorPin = A0;
 int sensorValue = 0;      //Analog value from sensor in range of 0-1032.
 int sensorOffset = 20;    //Analog value required to trigger the LED Matrix
@@ -17,6 +17,8 @@ bool sortState = false;   //Defaults to FALSE. The array is considered unsorted 
 
 void setup() {
   pinMode(sensorPin, INPUT);
+  pinMode(LEDPIN, OUTPUT);
+  digitalWrite(LEDPIN, LOW);
   Serial.begin(115200);
   arrayLength = sizeof(sensorArray) / sizeof(sensorArray[0]);
 }
@@ -27,39 +29,41 @@ void readSensor() {
   if(sensorCount < sizeof(sensorArray) / sizeof(sensorArray[0])) {
     sensorArray[sensorCount] = sensorValue;
     sensorCount++;
-    Serial.print("Sensor READING: ");
-    Serial.println(sensorValue);
+//    Serial.print("Sensor READING: ");
+//    Serial.println(sensorValue);
   }
   else {
-    Serial.print("SensorArray UNSORTED: ");
-    for (int i = 0; i < arrayLength; i++) {
-      Serial.print(sensorArray[i]);
-      Serial.print(", ");
-    }
-    Serial.println();
+//    Serial.print("SensorArray UNSORTED: ");
+//    for (int i = 0; i < arrayLength; i++) {
+//      Serial.print(sensorArray[i]);
+//      Serial.print(", ");
+//    }
+//    Serial.println();
     arraySort();
-    Serial.print("SensorArray SORTED: ");
-    for (int i = 0; i < arrayLength; i++) {
-      Serial.print(sensorArray[i]);
-      Serial.print(", ");
-    }
-    Serial.println();
+//    Serial.print("SensorArray SORTED: ");
+//    for (int i = 0; i < arrayLength; i++) {
+//      Serial.print(sensorArray[i]);
+//      Serial.print(", ");
+//    }
+//    Serial.println();
     sensorMedian = sensorArray[(int)(sizeof(sensorArray) / sizeof(sensorArray[0])) / 2];
     //Set LED Matrix
     if(sensorValue >= (sensorMedian + sensorOffset) && sensorState == false) {
-      Serial.print("Sensor ON!");
+      Serial.println("Sensor ON!");
       sensorState = true;
+      digitalWrite(LEDPIN, HIGH);
     }
     else if(sensorValue < sensorMedian && sensorState == true) {
-      Serial.print("Sensor OFF!");
+      Serial.println("Sensor OFF!");
       sensorState = false;
+      digitalWrite(LEDPIN, LOW);
     }
     sensorCount = 0;
-    Serial.print("Sensor VALUE: ");
-    Serial.println(sensorValue);
-    Serial.print("Sensor MEDIAN: ");
-    Serial.println(sensorMedian);
-    Serial.println();
+//    Serial.print("Sensor VALUE: ");
+//    Serial.println(sensorValue);
+//    Serial.print("Sensor MEDIAN: ");
+//    Serial.println(sensorMedian);
+//    Serial.println();
   } 
 }
 
@@ -75,7 +79,7 @@ void arraySort() {
         sensorTemp = 0;
       }
     }
-    Serial.println(sortState);
+//    Serial.println(sortState);
   }
   sortState = false;    //Reset sortState to default for the next sort
 }
